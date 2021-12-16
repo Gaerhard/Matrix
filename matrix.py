@@ -1,3 +1,6 @@
+import pyfma
+import vector
+
 class Matrix:
     def __init__(self, numberOfRows, numberOfColumns, data):
         self.numberOfRows = numberOfRows
@@ -50,6 +53,52 @@ class Matrix:
             if (self.numberOfColumns != len(self.data[i])):
                 print("Invalid number of Columns in matrix")
                 exit()
+    
+    def mulMatrix(self, m: "Matrix"):
+        if (self.numberOfColumns != m.numberOfColumns
+            or self.numberOfRows != m.numberOfRows
+            or self.numberOfRows != self.numberOfColumns):
+            print("Both matrices should be square matrices and should have the same dimensions")
+            return
+        m_map = []
+        for i in range(self.numberOfRows):
+            newRow = []
+            for k in range(m.numberOfColumns):
+                tmp = 0
+                for j in range(self.numberOfColumns):
+                    tmp = pyfma.fma(self.data[i][j], m.data[j][k], tmp)
+                newRow.append(tmp)
+            m_map.append(newRow)
+        return m_map
+
+    def mulVector(self, v: vector.Vector):
+        if (self.numberOfColumns != self.numberOfRows 
+            or self.numberOfColumns != v.numberOfColumns):
+            print("Matrix should be a square matrix and have the same amount of columns as the vector")
+            return
+        result = []
+        for i in range(self.numberOfRows):
+            tmp = 0
+            for j in range(self.numberOfColumns):
+                tmp = pyfma.fma(self.data[i][j], v.data[j], tmp)
+            result.append(tmp)
+        return result
+
+    def trace(self):
+        if (self.numberOfRows != self.numberOfColumns):
+            print("The matrix should be a square matrix")
+            return
+        result = 0
+        for i in range(self.numberOfRows):
+            result += self.data[i][i]
+        return result
+
+    def transpose(self):
+        m_transp = [[0 for x in range(self.numberOfColumns)] for y in range(self.numberOfRows)]
+        for i in range(self.numberOfRows):
+            for j in range(self.numberOfColumns):
+                m_transp[j][i] = self.data[i][j]
+        return m_transp
 
 def createMatrix():
     r = int(input("enter rows: "))
