@@ -100,6 +100,30 @@ class Matrix:
                 m_transp[j][i] = self.data[i][j]
         return m_transp
 
+    def reducedRowEchelon(self):
+        m = self
+        pivot_coord = 0
+        for r in range(m.numberOfRows):
+            if (m.numberOfColumns <= pivot_coord):
+                return m
+            i = r
+            while m.data[i][pivot_coord] == 0:
+                i += 1
+                if (i == m.numberOfRows):
+                    i = r
+                    pivot_coord += 1
+                    if (pivot_coord == m.numberOfColumns):
+                        return m
+            m.data[i],m.data[r] = m.data[r],m.data[i]
+            pivot_val = m.data[r][pivot_coord]
+            m.data[r] = [ m_element / pivot_val for m_element in m.data[r]]
+            for i in range(m.numberOfRows):
+                if (i != r):
+                    pivot_val = m.data[i][pivot_coord]
+                    m.data[i] = [i_val - r_val * pivot_val for r_val, i_val in (zip(m.data[r], m.data[i]))]
+            pivot_coord += 1
+        return m
+
 def createMatrix():
     r = int(input("enter rows: "))
     c = int(input("enter columns: "))
