@@ -124,6 +124,30 @@ class Matrix:
             pivot_coord += 1
         return m
 
+    def determinant(self):
+        #transposition of self. echelon reduction to "inferior triangle" matrix. in the end transposition
+        A_t = Matrix(self.numberOfRows, self.numberOfColumns,
+            [[self.data[j][i] for i in range(self.numberOfColumns)] for j in range(self.numberOfRows)])
+
+        A_t.data = A_t.transpose()
+        # L_t = Matrix(A_t.numberOfRows, A_t.numberOfColumns,
+        #     [[A_t.data[j][i] for i in range(A_t.numberOfColumns)] for j in range(A_t.numberOfRows)])
+        A_t = A_t.reducedRowEchelon()
+        # L_m = Matrix(L_t.numberOfRows, L_t.numberOfColumns,
+        #     [[L_t.data[j][i] for i in range(L_t.numberOfColumns)] for j in range(L_t.numberOfRows)])
+        A_t.data = A_t.transpose()
+        #echelon reduction to "superior triangle" matrix
+        U = []
+        U = self.reducedRowEchelon().data
+        #determinant of U is the product of the pivots, determinant of L is the product of the pivots
+        det_L = 1
+        for i in range(A_t.numberOfRows):
+            det_L *= A_t.data[i][i]
+        det_U = 1
+        for i in range(self.numberOfRows):
+            det_U *= U[i][i]
+        return det_L * det_U
+
 def createMatrix():
     r = int(input("enter rows: "))
     c = int(input("enter columns: "))
